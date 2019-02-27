@@ -30,7 +30,6 @@ private:
 	Node* access(int i); 
 	Node* accesshelper(int i, Node* n);
 	Node* getMax(Node* n);
-	Node* getMin(Node* n);
 	Node* join(Node* n1, Node *n2);
 	std::pair<Node*, Node*> split(int i, Node* n);
 
