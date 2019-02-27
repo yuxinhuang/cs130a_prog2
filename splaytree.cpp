@@ -73,25 +73,30 @@ SplayTree::Node* SplayTree::splay(Node* root, int i){
 				root=rightRotate(root);
 				return root;
 			}
-			else if ((root->left->left->left!=NULL)&&((root->left->left->left->i==i) || ((root->left->left->left->left==NULL)&&(root->left->left->left->right==NULL)))){
+			if (root->left->left->right!=NULL){ //rllr !=NULL
+				if ((root->left->left->right->i==i) || ((root->left->left->right->left==NULL)&&(root->left->left->right->right==NULL))){
+					root->left->left=leftRotate(root->left->left);
+					root->left=rightRotate(root->left);
+				
+					root=rightRotate(root);
+					return root;
+				}
+			}
+			if (root->left->left->left!=NULL){//rlll !=NULL
+				if ((root->left->left->left->i==i) || ((root->left->left->left->left==NULL)&&(root->left->left->left->right==NULL))){
 				root->left=rightRotate(root->left);
 				root->left=rightRotate(root->right);
 				root=rightRotate(root);
 				return root;
 			}
-			else if ((root->left->left->right!=NULL)&&((root->left->left->right->i==i) || ((root->left->left->right->left==NULL)&&(root->left->left->right->right==NULL)))){
-				root->left->left=leftRotate(root->left->left);
-				root->left=rightRotate(root->left);
-				//root->left=splay(root->left,i);
-				root=rightRotate(root);
-				return root;
-			}else {
+			}
+			
 				
 				root->left->left=splay(root->left->left, i);
 				root=rightRotate(root);
 				root=rightRotate(root);
 				return root ;
-			}
+			
 
 		}
 		else{ //left zig-zag
@@ -104,26 +109,31 @@ SplayTree::Node* SplayTree::splay(Node* root, int i){
 				root=rightRotate(root);
 				return root;
 			}
-			else if (((root->left->right->right!=NULL)||(root->left->right->left!=NULL))&&((root->left->right->left->i==i)||(root->left->right->right->i==i)|| ((root->left->right->left->left==NULL )&& (root->left->right->left->right==NULL) )|| ((root->left->right->right->left==NULL )&& (root->left->right->right->right==NULL) ))){
-				if (root->left->right->left->i==i && root->left->right->left!=NULL){
+			if (root->left->right->left!=NULL){ //rlrl!=NULL
+				if ((root->left->right->left->i==i) ||((root->left->right->left->left==NULL )&& (root->left->right->left->right==NULL) ) ){
 					root->left->right=rightRotate(root->left->right);
 					root->left=leftRotate(root->left);
 					root=rightRotate(root);
 					return root;
-				}else{
+				}
+
+			}
+			if (root->left->right->right!=NULL){ //rlrr !=NULL
+				if ((root->left->right->right->i==i) || ((root->left->right->right->left==NULL )&& (root->left->right->right->right==NULL) )){
 					root->left=leftRotate(root->left);
 					root->left=leftRotate(root->left);
 					root=rightRotate(root);
 					return root;
 				}
-	
+
 			}
-			else{
+			
+			
 				root->left->right= splay(root->left->right,i);
 				root->left=leftRotate(root->left);
 				root=rightRotate(root);
 				return root;
-			}
+		
 
 
 		}
@@ -147,20 +157,25 @@ SplayTree::Node* SplayTree::splay(Node* root, int i){
 
 				return root;
 			}
-			else if (((root->right->right->left!=NULL)||(root->right->right->right!=NULL))&&((root->right->right->left->i==i)||(root->right->right->right->i==i)||((root->right->right->right->left==NULL)&&(root->right->right->right->right==NULL))|| ((root->right->right->left->left==NULL)&&(root->right->right->left->right==NULL)))){
-				if (root->right->right->left->i==i && root->right->right->left!=NULL){
+			 if (root->right->right->right!=NULL){ //rrrr !=NULL
+				if ((root->right->right->right->i==i) ||((root->right->right->right->left==NULL)&&(root->right->right->right->right==NULL))){
+					root->right=leftRotate(root->right);
+					root->right=leftRotate(root->right);
+					root=leftRotate(root);
+					return root;
+				}
+			}
+			 if (root->right->right->left!=NULL){ //rrrl!=NULL
+				if ((root->right->right->left->i==i) || ((root->right->right->left->left==NULL)&&(root->right->right->left->right==NULL))){
 					root->right->right=rightRotate(root->right->right);
 					root->right=leftRotate(root->right);
-				}else{
-					root->right=rightRotate(root->right);
-					root->right=rightRotate(root->right);
+					root=leftRotate(root);
+					return root;
 				}
 				
+				
+			}
 
-				root=leftRotate(root);
-			
-				return root;
-			}else{
 				//root->right->right = splay(root->right->right, i);
 				//root = leftRotate(root); 
 				root->right->right=splay(root->right->right, i);
@@ -170,7 +185,7 @@ SplayTree::Node* SplayTree::splay(Node* root, int i){
 				//root=leftRotate(root);
 				return root;
 			}
-		}
+		
 		else{ //right zigzag
 			if (root->right->left==NULL){//splay on root->right
 				root=leftRotate(root);
@@ -182,19 +197,25 @@ SplayTree::Node* SplayTree::splay(Node* root, int i){
 				root=leftRotate(root);
 				return root;
 			}
-			else if (((root->right->left->left!=NULL)||(root->right->left->right!=NULL))&&((root->right->left->left->i==i)||(root->right->left->right->i==i)|| ((root->right->left->left->left==NULL )&& (root->right->left->left->right==NULL) )|| ((root->right->left->right->left==NULL )&& (root->right->left->right->right==NULL) ))){
-				if (root->right->left->left->i==i && root->right->left->left!=NULL){
-					root->right=rightRotate(root->right);
-					root->right=rightRotate(root->right);
-
-				}
-				else{
+			if (root->right->left->right!=NULL){ //rrlr!=NULL
+				if ((root->right->left->right->i==i) ||((root->right->left->right->left==NULL)&&(root->right->left->right->right==NULL))){
 					root->right->left=leftRotate(root->right->left);
 					root->right=rightRotate(root->right);
+					root=leftRotate(root);
+				    return root;
 				}
-				root=leftRotate(root);
-				return root;
-			}else{
+
+			}
+			if (root->right->left->left!=NULL){ //rrll!=NULL
+				if ((root->right->left->left->i==i) ||((root->right->left->left->left==NULL)&&(root->right->left->left->right==NULL))){
+					root->right=rightRotate(root->right);
+					root->right=rightRotate(root->right);
+					root=leftRotate(root);
+					return root;
+				}
+
+			}
+			
 				root->right->left= splay(root->right->left,i);
 				root->right=rightRotate(root->right);
 				root=leftRotate(root);
@@ -204,7 +225,7 @@ SplayTree::Node* SplayTree::splay(Node* root, int i){
 				//root->right= splay(root->right,i);
 				
 				
-			}
+			
 		}
 
 	}
@@ -420,16 +441,16 @@ pair<SplayTree,SplayTree> SplayTree::split(int i, SplayTree t){
 void SplayTree::find(int i){
 	this->root=access (i);
 	if (this->root==NULL){
-		print();
+		//print();
 		cout<<"item "<<i<<" not found"<<endl;
 		return;
 	}
 	if (i==this->root->i){
-		print();
+		//print();
 		cout<< "item "<<i<<" found"<<endl;
 		return;
 	}
-	print();
+	//print();
 	cout<< "item "<<i<<" not found"<<endl;
 	return;
 }
@@ -444,11 +465,11 @@ void SplayTree::insert(int i){
 		this->root=n;
 		
 		cout<<"item "<<i<<" inserted"<<endl;
-		print();
+		//print();
 		return ;
 	}
 	if (this->root->i==i){
-		print();
+		//print();
 		cout<<"item "<<i<<" not inserted; already present"<<endl;
 		return;
 		
@@ -468,7 +489,7 @@ void SplayTree::insert(int i){
 	n->left=tree.first;
 	this->root=n;
 	cout<<"item "<<i<<" inserted"<<endl;
-	print();
+	//print();
 	return ;
 
 
@@ -576,7 +597,7 @@ void SplayTree::insert(int i){
 
 void SplayTree:: delete_(int i){
 	if (this->root==NULL){
-		print();
+		//print();
 		cout<<"item "<<i<< " not deleted; not present"<<endl;
 		return;
 	}
@@ -585,16 +606,17 @@ void SplayTree:: delete_(int i){
 		if ((root->right==NULL) && (root->left==NULL)){ //if there is only one element 
 			delete root;
 			root=NULL;
-			print();
+			//print();
 			cout<<"item "<<i<<" deleted"<<endl;
 			return;
 		}
+		/*
 		if ((root->right==NULL) || (root->left==NULL)){ //if there are 2 elements
 			if (root->left==NULL){
 				Node*n =root->right;
 				delete root;
 				root=n;
-				print();
+				//print();
 				cout<<"item "<<i<<" deleted"<<endl;
 				return;
 
@@ -602,66 +624,100 @@ void SplayTree:: delete_(int i){
 				Node*n=root->left;
 				delete root;
 				root=n;
-				print();
+				//print();
 				cout<<"item "<<i<<" deleted"<<endl;
 				return;
 			}
 		}
+		*/
 		Node* m= join(root->left,root->right);
 		delete this->root;
 		this->root=m;
-		print();
+		//print();
 		cout<<"item "<<i<<" deleted"<<endl;
 		return;
 		
 	}
-	print();
+	//print();
 	cout<<"item "<<i<< " not deleted; not present"<<endl;
 	return;
 	
 }
 void SplayTree:: print(){
-	if (root==NULL)
-		return;
-	queue<Node *> q;
-	q.push(root);
-	while (q.empty() == false) 
-    { 
-        // Print front of queue and remove it from queue 
-        Node *node = q.front(); 
-        cout << node->i << endl; 
-        q.pop(); 
+
+    // Base Case  
+    if (root == NULL) return;  
   
-        /* Enqueue left child */
-        if (node->left != NULL) 
-            q.push(node->left); 
+    // Create an empty queue for level order tarversal  
+    queue<Node *> q;  
   
-        /*Enqueue right child */
-        if (node->right != NULL) 
-            q.push(node->right); 
-    } 
+    // Enqueue Root and initialize height  
+    q.push(root);  
+  
+    while (q.empty() == false)  
+    {  
+        // nodeCount (queue size) indicates number 
+        // of nodes at current lelvel.  
+        int nodeCount = q.size();  
+  
+        // Dequeue all nodes of current level and  
+        // Enqueue all nodes of next level  
+        while (nodeCount > 0) 
+        {  
+            Node *node = q.front();  
+            cout << node->i << " ";  
+            q.pop();  
+            if (node->left != NULL)  
+                q.push(node->left);  
+            if (node->right != NULL)  
+                q.push(node->right);  
+            nodeCount--;  
+        }  
+        cout << endl;  
+    }  
+  
+	
+	// if (root==NULL)
+	// 	return;
+	// queue<Node *> q;
+	// q.push(root);
+	// while (q.empty() == false) 
+ //    { 
+ //        // Print front of queue and remove it from queue 
+ //        Node *node = q.front(); 
+ //        cout << node->i << endl; 
+ //        q.pop(); 
+  
+ //        /* Enqueue left child */
+ //        if (node->left != NULL) 
+ //            q.push(node->left); 
+  
+ //        /*Enqueue right child */
+ //        if (node->right != NULL) 
+ //            q.push(node->right); 
+ //    } 
 
   
 
-	/*
-	cout<<"this root: "<<this->root->i<<endl;
-	Node* n=root;
-	queue<Node*> q;
-	if (n){
-		q.push(n);
-		cout<<n->i<<endl;
-	}
-	while (!q.empty()){
-		Node *m=q.front();
-		q.pop();
-		if (m->left){
-			q.push(m->left);
-			cout<<m->left->i<<endl;	
-		}
-		if (m->right){
-			q.push(m->right);
-			cout<<m->right->i<<endl;
-		}
-	}
-	*/
+	
+	// cout<<"this root: "<<this->root->i<<endl;
+	// Node* n=root;
+	// queue<Node*> q;
+	// if (n){
+	// 	q.push(n);
+	// 	cout<<n->i<<endl;
+	// }
+	// while (!q.empty()){
+	// 	Node *m=q.front();
+	// 	q.pop();
+	// 	if (m->left){
+	// 		q.push(m->left);
+	// 		cout<<m->left->i<<endl;	
+	// 	}
+	// 	if (m->right){
+	// 		q.push(m->right);
+	// 		cout<<m->right->i<<endl;
+	// 	}
+	// }
+	
 }
