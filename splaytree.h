@@ -32,7 +32,7 @@ private:
 	Node* getMax(Node* n);
 	Node* getMin(Node* n);
 	Node* join(Node* n1, Node *n2);
-	std::pair<SplayTree,SplayTree> split(int i, SplayTree t);
+	std::pair<Node*, Node*> split(int i, Node* n);
 
 
 
